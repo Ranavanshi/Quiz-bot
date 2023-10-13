@@ -2,8 +2,8 @@ from pyrogram import Client, filters
 from pymongo import MongoClient
 import json
 import logging
-from quiz_filters import is_owner
-from quiz_commands import start_command, quiz_command, create_question_command, results_command, broadcast_command
+from filters import is_owner
+from commands import start_command, quiz_command, create_question_command, results_command, broadcast_command
 from quiz_google_search import google_search
 
 # Set up logging
