@@ -1,21 +1,18 @@
-import json
-import logging
+# your_bot_script.py
+
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from pymongo import MongoClient
-from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Filters
-import os
-import random
+from config import Config
 
-# Set up logging
-logging.basicConfig(filename='bot.log', level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# Use Config class variables
+TELEGRAM_BOT_TOKEN = Config.TELEGRAM_BOT_TOKEN
+API_ID = Config.API_ID
+API_HASH = Config.API_HASH
+MONGODB_URI = Config.MONGODB_URI
+LOGGING_GROUP_ID = Config.LOGGING_GROUP_ID
 
-# Replace 'YOUR_BOT_TOKEN' with your actual bot token
-TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN'
-API_ID = 'YOUR_API_ID'
-API_HASH = 'YOUR_API_HASH'
-MONGODB_URI = 'YOUR_MONGODB_URI'
+# ... rest of your code ...
 
 # Load questions from the JSON file
 with open('quiz_data.json', 'r') as file:
