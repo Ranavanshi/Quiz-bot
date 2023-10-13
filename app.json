@@ -1,8 +1,8 @@
 {
-  "name": "Quiz-bot",
+  "name": "Webnet Quiz-bot",
   "description": "Telegram Quiz Bot",
-  "repository": "https://github.com/yourusername/telegram-quiz-bot",
-  "logo": "https://your-logo-url.png",  // Replace with your logo URL
+  "repository": "https://github.com/Ranavanshi/Quiz-bot",
+  "logo": "https://graph.org/file/b27aa8d99d936274adaaf.jpg",  // Replace with your logo URL
   "keywords": ["telegram", "quiz", "bot"],
   "scripts": {
     "postdeploy": "python Quizbot.py"
