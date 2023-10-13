@@ -1,1 +1,1 @@
-worker:python3 -m Quiz-bot
+worker:python3 Quizbot.py
