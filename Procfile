@@ -1,1 +1,1 @@
-worker: python Quizbot.py
+worker:bash start
