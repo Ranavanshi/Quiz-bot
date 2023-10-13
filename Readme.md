@@ -20,7 +20,7 @@ Welcome to the Telegram Quiz Bot! This bot allows users to participate in quizze
    ```bash
    git clone https://github.com/yourusername/telegram-quiz-bot.git
    cd telegram-quiz-bot
-##DEPLOY TO HEROKU 
+## DEPLOY ON HEROKU 
 <h3 align="center">
     ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ʜᴇʀᴏᴋᴜ 」─
 </h3>
