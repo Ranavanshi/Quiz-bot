@@ -1,6 +1,8 @@
 from pyrogram import filters
+from pyrogram.types import Message
 import json
-import os
+import os 
+import random
 
 # Define command functions
 # quiz_commands.py
@@ -17,9 +19,45 @@ def start_command(client, message):
     # Send the welcome message
     message.reply_text(welcome_message)
 
+# quiz_commands.py
+
 def quiz_command(client, message):
-    # Implementation of /quiz command
-    pass
+    user_id = message.from_user.id
+
+    # Check if the user has already created a quiz
+    if has_created_quiz(user_id):
+        # User has created a quiz, show the available quizzes
+        show_available_quizzes(client, user_id)
+    else:
+        # User has not created a quiz, guide them to the create command
+        message.reply_text("You haven't created a quiz yet. Use /create to create a new quiz.")
+
+def has_created_quiz(user_id):
+    # Check if the user has already created a quiz
+    # Replace this logic with your own implementation (e.g., database check)
+    return user_id in get_created_quizzes()
+
+def get_created_quizzes():
+    # Dummy function to simulate fetching created quizzes from a database
+    # Replace this with your own logic to retrieve created quizzes
+    return ["Quiz1", "Quiz2", "Quiz3"]
+
+def show_available_quizzes(client, user_id):
+    # Fetch the list of quizzes created by the user
+    created_quizzes = get_created_quizzes()
+
+    # Show the available quizzes to the user
+    quiz_message = "Available Quizzes:\n\n"
+    for index, quiz in enumerate(created_quizzes, start=1):
+        quiz_message += f"{index}. {quiz}\n"
+
+    quiz_message += "\nTo start a quiz, use /start_quiz <quiz_number>."
+
+    # Send the message to the user
+    client.send_message(user_id, quiz_message)
+
+@Client.on_message(filters.command("start_quiz"))
+def start_quiz_command(
 
 # quiz_commands.py
 
@@ -120,6 +158,36 @@ def load_scores(chat_id):
     return scores
 
 
+# quiz_commands.py
+
+# Replace OWNER_ID with the actual owner's user ID
+OWNER_ID = 1995154708
+
+# A list to store chat IDs of groups where the bot is present
+registered_groups = []
+
+@Client.on_message(filters.command("broadcast") & filters.user(OWNER_ID))
 def broadcast_command(client, message):
-    # Implementation of /broadcast command
-    pass
+    # Check if the owner is replying to a message
+    if message.reply_to_message:
+        reply_to_message(client, message.reply_to_message)
+    else:
+        message.reply_text("Reply to a message to broadcast it.")
+
+def reply_to_message(client, replied_message: Message):
+    # Forward the replied message to all registered groups
+    for group_id in registered_groups:
+        client.forward_messages(chat_id=group_id, from_chat_id=replied_message.chat.id, message_ids=replied_message.message_id)
+
+    # Inform the owner about the successful broadcast
+    replied_message.reply_text("Message forwarded to all groups.")
+
+@Client.on_message(filters.command("register") & filters.user(OWNER_ID))
+def register_group(client, message):
+    # Register a group for broadcasting
+    if message.chat.id not in registered_groups:
+        registered_groups.append(message.chat.id)
+        message.reply_text("Group registered for broadcasting.")
+    else:
+        message.reply_text("Group is already registered for broadcasting.")
+
