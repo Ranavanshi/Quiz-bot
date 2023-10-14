@@ -3,4 +3,4 @@ build:
     web: Dockerfile
 
 run:
-  web: python Quizbot.py
+  web: python -m Quiz-bot
