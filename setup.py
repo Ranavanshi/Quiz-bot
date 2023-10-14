@@ -12,7 +12,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'Quiz-bot = Quiz-bot:main',  # Adjust the entry point based on your script structure
+            'quiz_bot = Quiz-bot:main',  # Adjust the entry point based on your script structure
         ],
     },
     author='Divyanshu Rana',
