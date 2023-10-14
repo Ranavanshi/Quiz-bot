@@ -267,12 +267,101 @@ def google_search(_, message):
         app.send_message(message.chat.id, f"No results found for '{search_query}'.")
 
 
+# Dictionary to store the current state of Tic Tac Toe games in different chats
+tic_tac_toe_games = {}
 
-###################################### Command to play math game
-@app.on_message(filters.command("mathgame"))
-def play_math_game(_, message):
-    # Implement logic for the math game
-    pass
+# Command to start a Tic Tac Toe game
+@app.on_message(filters.command("tictactoe"))
+def start_tic_tac_toe(_, message):
+    chat_id = message.chat.id
+
+    # Check if a Tic Tac Toe game is already in progress
+    if chat_id in tic_tac_toe_games:
+        app.send_message(chat_id, "A Tic Tac Toe game is already in progress in this chat.")
+        return
+
+    # Initialize a new Tic Tac Toe game
+    tic_tac_toe_games[chat_id] = {"board": [" "] * 9, "current_player": "X"}
+
+    # Display the initial game board
+    display_board(chat_id)
+
+# Command to make a move in the Tic Tac Toe game
+@app.on_message(filters.command("move") & filters.regex(r"^[1-9]$"))
+def make_move(_, message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    move = int(message.text)
+
+    # Check if a Tic Tac Toe game is in progress in this chat
+    if chat_id not in tic_tac_toe_games:
+        app.send_message(chat_id, "No Tic Tac Toe game in progress. Use /tictactoe to start a new game.")
+        return
+
+    game = tic_tac_toe_games[chat_id]
+
+    # Check if it's the current player's turn
+    if user_id != get_current_player_id(game):
+        app.send_message(chat_id, "It's not your turn.")
+        return
+
+    # Check if the selected move is valid
+    if not is_valid_move(game, move):
+        app.send_message(chat_id, "Invalid move. Please choose an empty cell (1-9).")
+        return
+
+    # Make the move
+    game["board"][move - 1] = game["current_player"]
+
+    # Check for a winner or a draw
+    winner = check_winner(game)
+    if winner:
+        app.send_message(chat_id, f"Player {winner} wins!")
+        end_game(chat_id)
+    elif " " not in game["board"]:
+        app.send_message(chat_id, "It's a draw!")
+        end_game(chat_id)
+    else:
+        # Switch to the next player
+        game["current_player"] = "O" if game["current_player"] == "X" else "X"
+        display_board(chat_id)
+
+# Function to display the current Tic Tac Toe board
+def display_board(chat_id):
+    game = tic_tac_toe_games[chat_id]
+    board = game["board"]
+    board_str = f"\n {board[0]} | {board[1]} | {board[2]} \n" \
+                f"-----------\n" \
+                f" {board[3]} | {board[4]} | {board[5]} \n" \
+                f"-----------\n" \
+                f" {board[6]} | {board[7]} | {board[8]} \n"
+
+    app.send_message(chat_id, f"Current board:\n{board_str}\nPlayer {game['current_player']}'s turn. Make a move (1-9).")
+
+# Function to check if a move is valid
+def is_valid_move(game, move):
+    return 1 <= move <= 9 and game["board"][move - 1] == " "
+
+# Function to check if there is a winner
+def check_winner(game):
+    board = game["board"]
+    win_conditions = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]
+
+    for condition in win_conditions:
+        if board[condition[0]] == board[condition[1]] == board[condition[2]] != " ":
+            return board[condition[0]]
+
+    return None
+
+# Function to get the ID of the current player
+def get_current_player_id(game):
+    current_player = game["current_player"]
+    return 1 if current_player == "X" else 2
+
+# Function to end the Tic Tac Toe game
+def end_game(chat_id):
+    del tic_tac_toe_games[chat_id]
+    app.send_message(chat_id, "Game over. Use /tictactoe to start a new game.")
 
 
 # Initialize the translator
