@@ -165,7 +165,7 @@ def send_question(group_id):
 
 
 # Initialize MongoDB client
-mongo_client = MongoClient("mongodb://localhost:27017/")
+mongo_client = MongoClient(Config.MONGODB_URI)
 db = mongo_client["quiz_bot"]
 
 # Define collections
@@ -173,7 +173,7 @@ quiz_collection = db["quizzes"]
 user_stats_collection = db["user_stats"]
 
 # Logger group ID
-logger_group_id = -100123456789  # Replace with your logger group ID
+logger_group_id = -1001971385258  # Replace with your logger group ID
 
 # Dictionary to store active quizzes by group ID
 active_quizzes = {}
@@ -389,7 +389,7 @@ def translate_text(_, message):
     app.send_message(message.chat.id, translation_message)
 
 # Initialize MongoDB client
-mongo_client = MongoClient("mongodb://localhost:27017/")
+mongo_client = MongoClient("Config.MONGODB_URI")
 db = mongo_client["quiz_bot"]
 
 # Define collections
