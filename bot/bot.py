@@ -564,8 +564,14 @@ def start_group_quiz(_, message):
 def stop_group_quiz(_, message):
     group_id = message.chat.id
 
+
     # Check if there is an active quiz in the group
-    if gr
+    if group_id in active_quizzes:
+        app.send_message(group_id, "The quiz has been stopped.")
+        # Remove the quiz information for this group
+        del active_quizzes[group_id]
+    else:
+        app.send_message(group_id, "No active quiz in this group.")
 
 
 # Command to translate text
